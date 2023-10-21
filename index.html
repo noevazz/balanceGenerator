@@ -26,14 +26,20 @@
             display: inline-block;
             border-radius: 10px;
             padding: 0.5rem;
-            margin: 0.5rem;
+            margin: 0.2rem;
+        }
+        .drag-element * {
+            margin: 0;
         }
         .drag-element:hover {
             cursor: grab;
         }
-        h3 {
+        h2, h3 {
             font-size: 1rem;
             font-weight: bold;
+        }
+        .btn-sm {
+            font-size: 0.5rem;
         }
     </style>
 </head>
@@ -270,8 +276,8 @@
                     <h3>${document.getElementById('tituloNuevo').value}</h3>
                     <p>${document.getElementById('valorNuevo').value}</p>
                 </div>
-                <button class="btn bg-dark editarElemento btn-sm" title="Editar" onclick="updateCurrentEdit(${dragElementsCount})">✏️</button>
-                <button class="btn bg-dark eliminarElemento btn-sm" onclick="eliminarElement(this)" title="Eliminar">❌</button>
+                <button class="btn bg-dark float-start editarElemento btn-sm" title="Editar" onclick="updateCurrentEdit(${dragElementsCount})">✏️</button>
+                <button class="btn bg-dark float-end eliminarElemento btn-sm" onclick="eliminarElement(this)" title="Eliminar">❌</button>
             `;
             document.body.appendChild(nuevoElemento);
             document.getElementById('tituloNuevo').value = '';
@@ -283,10 +289,14 @@
     </script>
 
     <script>
-        const iconButton = document.getElementById("switchColor");
-        let isMoon = true; // Variable para rastrear el estado del emoji
+        let isMoon;
+        if (!JSON.parse(localStorage.getItem('isMoon'))) {
+            localStorage.setItem('isMoon', JSON.stringify(false));
+        }
+        isMoon = JSON.parse(localStorage.getItem('isMoon'));
 
-        iconButton.addEventListener("click", function () {
+        const iconButton = document.getElementById("switchColor");
+        function change () {
             if (isMoon) {
                 // Cambiar a emoji del sol y quitar el atributo
                 iconButton.innerHTML = '🌞'; // Emoji del sol
@@ -294,7 +304,6 @@
                 document.body.setAttribute("data-bs-theme", "dark");
                 iconButton.classList.remove("btn-dark")
                 iconButton.classList.add("btn-primary")
-
             } else {
                 // Cambiar a emoji de la luna y agregar el atributo
                 iconButton.innerHTML = '🌜'; // Emoji de la luna
@@ -303,8 +312,14 @@
                 iconButton.classList.add("btn-dark")
                 iconButton.classList.remove("btn-primary")
             }
+        }
+        function changeFull () {
             isMoon = !isMoon;
-        });
+            change();
+            localStorage.setItem('isMoon', JSON.stringify(isMoon));
+        }
+        change();
+        iconButton.addEventListener("click", changeFull );
     </script>
 </body>
 </html>
