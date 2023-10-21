@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>División de Pantalla en 6 Columnas</title>
+    <title>Balance Generator</title>
      <!-- Latest compiled and minified CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Latest compiled JavaScript -->
@@ -37,7 +37,7 @@
         }
     </style>
 </head>
-<body class="container">
+<body class="container-fluid">
     <!-- The Modal -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog">
@@ -54,7 +54,7 @@
                 <div>Título</div>
                 <input type="text" name="" id="tituloModal">
                 <div>Valor</div>
-                <input type="number" name="" id="valorModal">
+                <input type="text" name="" id="valorModal">
             </div>
     
             <!-- Modal footer -->
@@ -92,10 +92,23 @@
         </div>
     </div>
     <hr>
-    <input type="text" name="" id="tituloNuevo" placeholder="Título">
-    <input type="number" name="" id="valorNuevo" placeholder="13000">
-    <button id="crearElemento" class="btn btn-info" title="Crear Elemento">➕</button>
-    <button id="generarReporte" class="btn btn-primary">Generar Reporte</button>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-12">
+                <div class="mb-3">Agrega un título y su valor para crear una tarjeta nueva:</div>
+                <input type="text" class="form-control mb-3" id="tituloNuevo" placeholder="Título">
+                <input type="text" class="form-control mb-3" id="valorNuevo" placeholder="13000">
+                <button id="crearElemento" class="btn btn-info" title="Crear Tarjeta">Crear tarjeta ➕</button>
+                <button id="generarReporte" class="btn btn-primary" style="display: none;">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="reporte">
+
+    </div>
+    
+
     <hr>
     
 
@@ -107,7 +120,9 @@
         function drag(event) {
                 event.dataTransfer.setData("text", event.target.id);
         }
-
+        
+        let data = {'activos':{}, 'pasivos': {}};
+        
         function drop(event) {
             event.preventDefault();
             var data = event.dataTransfer.getData("text");
@@ -120,19 +135,75 @@
             if (target.classList.contains('column')) {
                 target.appendChild(document.getElementById(data));
             }
-        }
+            document.getElementById("generarReporte").click();
 
+        }
         document.getElementById("generarReporte").addEventListener("click", function() {
+            data = {'activos':{}, 'pasivos': {}};
             var columnas = document.querySelectorAll(".column");
+            columnas.forEach(function(columna) {
+                var elementos = columna.querySelectorAll(".drag-element");
+                var elementosEnColumna = Array.from(elementos).map(function(elemento) {
+                    data[columna.querySelector("h2").textContent.includes('Activos')? 'activos' : 'pasivos']
+                    [columna.querySelector("h2").textContent] = {};
+                });
+            });
             columnas.forEach(function(columna) {
                 var elementos = columna.querySelectorAll(".drag-element");
                 var elementosEnColumna = Array.from(elementos).map(function(elemento) {
                     var h3 = elemento.querySelector("h3").textContent;
                     var p = elemento.querySelector("p").textContent;
+                    data[columna.querySelector("h2").textContent.includes('Activos')? 'activos' : 'pasivos']
+                    [columna.querySelector("h2").textContent][h3] = p;
                     return h3 + ": " + p;
                 });
-                console.log("Elementos en " + columna.querySelector("h2").textContent + ": " + elementosEnColumna.join(", "));
             });
+            document.getElementById('reporte').innerHTML = '';
+            const clasificacion = {'activos': ['Activos Corrientes', 'Activos Fijos', 'Activos diferidos'],
+                                   'pasivos': ['Pasivos circulantes', 'Pasivos fijos', 'Pasivos diferidos']}
+            let sumaActivos = 0;
+            let sumaPasivos = 0;
+            for (activoClasificacion of clasificacion.activos) {
+                if (data.activos[activoClasificacion]) {
+                    const title = document.createElement('div');
+                    title.textContent = activoClasificacion;
+                    const ul = document.createElement('ul');
+                    for (i in data.activos[activoClasificacion]) {
+                        const li = document.createElement('li');
+                        li.textContent = `${i}: ${data.activos[activoClasificacion][i]}`;
+                        ul.appendChild(li);
+                        sumaActivos += parseFloat(data.activos[activoClasificacion][i].replaceAll(',', ''));
+                    }
+                    document.getElementById('reporte').appendChild(title);
+                    document.getElementById('reporte').appendChild(ul);
+                }
+            }
+            
+            const sumaActivosElement = document.createElement('div');
+            sumaActivosElement.textContent = `Suma Activos: ${new Intl.NumberFormat().format(sumaActivos)}`;
+            document.getElementById('reporte').appendChild(sumaActivosElement);
+
+            const hr = document.createElement('hr');
+            document.getElementById('reporte').appendChild(hr);
+
+            for (pasivoClasificacion of clasificacion.pasivos) {
+                if (data.pasivos[pasivoClasificacion]) {
+                    const title = document.createElement('div');
+                    title.textContent = pasivoClasificacion;
+                    const ul = document.createElement('ul');
+                    for (i in data.pasivos[pasivoClasificacion]) {
+                        const li = document.createElement('li');
+                        li.textContent = `${i}: ${data.pasivos[pasivoClasificacion][i]}`;
+                        ul.appendChild(li);
+                        sumaPasivos += parseFloat(data.pasivos[pasivoClasificacion][i].replaceAll(',', ''));
+                    }
+                    document.getElementById('reporte').appendChild(title);
+                    document.getElementById('reporte').appendChild(ul);
+                }
+            }
+            const sumaPasivosElement = document.createElement('div');
+            sumaPasivosElement.textContent = `Suma Pasivos: ${new Intl.NumberFormat().format(sumaPasivos)}`;
+            document.getElementById('reporte').appendChild(sumaPasivosElement);
         });
 
         document.getElementById("valorNuevo").addEventListener("keyup",  function (event) {
@@ -144,6 +215,7 @@
         let dragElementsCount = 0;
         function eliminarElement (dragElement) {
             dragElement.parentElement.remove();
+            document.getElementById("generarReporte").click();
         }
         let currentEditorID;
         function updateCurrentEdit (elementoPadreID) {
@@ -152,6 +224,7 @@
             document.getElementById('tituloModal').value = elementoPadre.querySelector("h3").textContent;
             document.getElementById('valorModal').value = elementoPadre.querySelector("p").textContent;
             document.getElementById("openModal").click();
+
         }
         function editarElement () {
             const elementoPadre = document.getElementById(currentEditorID);
@@ -159,6 +232,7 @@
             document.getElementById('tituloModal').value = '';
             elementoPadre.querySelector("p").textContent = document.getElementById('valorModal').value;
             document.getElementById('valorModal').value = '';
+            document.getElementById("generarReporte").click();
 
         }
 
@@ -204,6 +278,7 @@
             document.getElementById("tituloNuevo").focus();
         });
         document.getElementById("tituloNuevo").focus();
+        document.getElementById("generarReporte").click();
     </script>
 
     <script>
@@ -228,7 +303,6 @@
                 iconButton.classList.remove("btn-primary")
             }
             isMoon = !isMoon;
-            document.getElementById("tituloNuevo").focus();
         });
     </script>
 </body>
