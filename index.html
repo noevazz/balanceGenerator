@@ -99,20 +99,33 @@
         </div>
     </div>
     <hr>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-6 col-12">
-                <div class="mb-3">Agrega un título y su valor para crear una tarjeta nueva:</div>
-                <input type="text" class="form-control mb-3" id="tituloNuevo" placeholder="Título">
-                <input type="text" class="form-control mb-3" id="valorNuevo" placeholder="13000">
-                <button id="crearElemento" class="btn btn-info" title="Crear Tarjeta">Crear tarjeta ➕</button>
-                <button id="generarReporte" class="btn btn-primary" style="display: none;">Generar Reporte</button>
+    
+    <div id="accordion">
+        <div class="card-header">
+            <a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#collapseFormulario" title="mostrar/ocultar formulario">👁️</a>
+          </div>
+        <div id="collapseFormulario" class="collapse show" data-bs-parent="#accordion">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-6 col-12">
+                        <div class="mb-3">Agrega un título y su valor para crear una tarjeta nueva:</div>
+                        <input type="text" class="form-control mb-3" id="tituloNuevo" placeholder="Título">
+                        <input type="text" class="form-control mb-3" id="valorNuevo" placeholder="13000">
+                        <button id="crearElemento" class="btn btn-info" title="Crear Tarjeta">Crear tarjeta ➕</button>
+                        <button id="generarReporte" class="btn btn-primary" style="display: none;">Generar Reporte</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <div id="reporte">
-
+    <hr>
+    <div id="accordion">
+        <div class="card-header">
+            <a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#collapseReport" title="mostrar/ocultar reporte">👁️</a>
+        </div>
+        <div id="collapseReport" class="collapse show" data-bs-parent="#accordion">
+            <div id="reporte"></div>
+        </div>
     </div>
     
 
