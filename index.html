@@ -203,8 +203,8 @@
             sumaActivosElement.textContent = `Suma Activos: ${new Intl.NumberFormat().format(sumaActivos)}`;
             document.getElementById('reporte').appendChild(sumaActivosElement);
 
-            const hr = document.createElement('hr');
-            document.getElementById('reporte').appendChild(hr);
+            const hr1 = document.createElement('hr');
+            document.getElementById('reporte').appendChild(hr1);
 
             for (pasivoClasificacion of clasificacion.pasivos) {
                 if (data.pasivos[pasivoClasificacion]) {
@@ -224,6 +224,15 @@
             const sumaPasivosElement = document.createElement('div');
             sumaPasivosElement.textContent = `Suma Pasivos: ${new Intl.NumberFormat().format(sumaPasivos)}`;
             document.getElementById('reporte').appendChild(sumaPasivosElement);
+
+            const hr2= document.createElement('hr');
+            document.getElementById('reporte').appendChild(hr2);
+            
+            const patrimonioNeto = sumaActivos - sumaPasivos;
+            const patrimonioNetoElement = document.createElement('div');
+            patrimonioNetoElement.textContent =`Patrimonio Neto (A-P): ${new Intl.NumberFormat().format(patrimonioNeto)}`;
+            document.getElementById('reporte').appendChild(patrimonioNetoElement);
+
         });
 
         document.getElementById("valorNuevo").addEventListener("keyup",  function (event) {
@@ -278,6 +287,7 @@
             } else {
                 return;
             }
+            let precio = document.getElementById('valorNuevo').value.replace(/\D/g, '');
             var nuevoElemento = document.createElement("div");
             nuevoElemento.id = ++dragElementsCount;
             nuevoElemento.classList.add('drag-element');
@@ -287,7 +297,7 @@
             nuevoElemento.innerHTML = `
                 <div>
                     <h3>${document.getElementById('tituloNuevo').value}</h3>
-                    <p>${document.getElementById('valorNuevo').value}</p>
+                    <p>${new Intl.NumberFormat().format(precio)}</p>
                 </div>
                 <button class="btn bg-dark float-start editarElemento btn-sm" title="Editar" onclick="updateCurrentEdit(${dragElementsCount})">✏️</button>
                 <button class="btn bg-dark float-end eliminarElemento btn-sm" onclick="eliminarElement(this)" title="Eliminar">❌</button>
