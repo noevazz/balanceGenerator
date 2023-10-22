@@ -65,7 +65,7 @@
     
             <!-- Modal footer -->
             <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="editarElement()">Guardar</button>
+            <button type="button" id="guardarModal" class="btn btn-primary" data-bs-dismiss="modal" onclick="editarElement()">Guardar</button>
             </div>
     
         </div>
@@ -253,7 +253,6 @@
             document.getElementById('tituloModal').value = elementoPadre.querySelector("h3").textContent;
             document.getElementById('valorModal').value = elementoPadre.querySelector("p").textContent;
             document.getElementById("openModal").click();
-
         }
         function editarElement () {
             const elementoPadre = document.getElementById(currentEditorID);
@@ -319,6 +318,7 @@
     </script>
 
     <script>
+        // CONTROLAR EL COLOR DE LA PAGINA
         let isMoon;
         if (!JSON.parse(localStorage.getItem('isMoon'))) {
             localStorage.setItem('isMoon', JSON.stringify(false));
@@ -351,5 +351,28 @@
         change();
         iconButton.addEventListener("click", changeFull );
     </script>
+    
+    <script>
+        document.getElementById('myModal').addEventListener('shown.bs.modal', function () {
+            document.getElementById('tituloModal').focus();
+        });
+        var tituloModal = document.getElementById('tituloModal');
+        var valorModal = document.getElementById('valorModal');
+        var modal = document.getElementById('myModal');
+
+        tituloModal.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+            event.preventDefault();
+             modal.querySelector('#guardarModal').click();
+            }
+        });
+        valorModal.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+            event.preventDefault();
+             modal.querySelector('#guardarModal').click();
+            }
+        });
+    </script>
+      
 </body>
 </html>
