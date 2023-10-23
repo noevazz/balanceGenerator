@@ -44,6 +44,9 @@
         .btn-sm {
             font-size: 0.5rem;
         }
+        .hr-sub {
+            border-top: 1px dashed;
+        }
     </style>
 </head>
 <body class="container-fluid">
@@ -189,48 +192,69 @@
             let sumaActivos = 0;
             let sumaPasivos = 0;
             for (activoClasificacion of clasificacion.activos) {
+                let sumaClasificacionIndividual = 0;
                 if (data.activos[activoClasificacion]) {
                     const title = document.createElement('div');
+                    title.classList.add('text-primary');
                     title.textContent = activoClasificacion;
                     const ul = document.createElement('ul');
+                    ul.classList.add('mb-0')
                     for (i in data.activos[activoClasificacion]) {
                         const li = document.createElement('li');
                         li.textContent = `${i}: ${data.activos[activoClasificacion][i]}`;
                         ul.appendChild(li);
                         sumaActivos += parseFloat(data.activos[activoClasificacion][i].replace(/[^0-9.]/g, ''));
+                        sumaClasificacionIndividual += parseFloat(data.activos[activoClasificacion][i].replace(/[^0-9.]/g, ''))
                     }
                     document.getElementById('reporte').appendChild(title);
                     document.getElementById('reporte').appendChild(ul);
+                    const sumaClasificacionIndividualElement = document.createElement('div');
+                    sumaClasificacionIndividualElement.classList.add('text-secondary', 'mb-4', 'mt-0');
+                    sumaClasificacionIndividualElement.textContent = `Suma ${activoClasificacion}: ${sumaClasificacionIndividual}`
+                    document.getElementById('reporte').appendChild(sumaClasificacionIndividualElement);
+
                 }
             }
             
             const sumaActivosElement = document.createElement('div');
             sumaActivosElement.textContent = `Suma Activos: ${new Intl.NumberFormat().format(sumaActivos)}`;
+            sumaActivosElement.classList.add('text-success');
             document.getElementById('reporte').appendChild(sumaActivosElement);
 
             const hr1 = document.createElement('hr');
+            hr1.classList.add('hr-sub');
             document.getElementById('reporte').appendChild(hr1);
 
             for (pasivoClasificacion of clasificacion.pasivos) {
+                let sumaClasificacionIndividual = 0;
                 if (data.pasivos[pasivoClasificacion]) {
                     const title = document.createElement('div');
+                    title.classList.add('text-primary');
                     title.textContent = pasivoClasificacion;
                     const ul = document.createElement('ul');
+                    ul.classList.add('mb-0')
                     for (i in data.pasivos[pasivoClasificacion]) {
                         const li = document.createElement('li');
                         li.textContent = `${i}: ${data.pasivos[pasivoClasificacion][i]}`;
                         ul.appendChild(li);
                         sumaPasivos += parseFloat(data.pasivos[pasivoClasificacion][i].replace(/[^0-9.]/g, ''));
+                        sumaClasificacionIndividual += parseFloat(data.pasivos[pasivoClasificacion][i].replace(/[^0-9.]/g, ''))
                     }
                     document.getElementById('reporte').appendChild(title);
                     document.getElementById('reporte').appendChild(ul);
+                    const sumaClasificacionIndividualElement = document.createElement('div');
+                    sumaClasificacionIndividualElement.classList.add('text-secondary', 'mb-4', 'mt-0');
+                    sumaClasificacionIndividualElement.textContent = `Suma ${pasivoClasificacion}: ${sumaClasificacionIndividual}`
+                    document.getElementById('reporte').appendChild(sumaClasificacionIndividualElement);
                 }
             }
             const sumaPasivosElement = document.createElement('div');
             sumaPasivosElement.textContent = `Suma Pasivos: ${new Intl.NumberFormat().format(sumaPasivos)}`;
+            sumaPasivosElement.classList.add('text-success');
             document.getElementById('reporte').appendChild(sumaPasivosElement);
 
             const hr2= document.createElement('hr');
+            hr2.classList.add('hr-sub');
             document.getElementById('reporte').appendChild(hr2);
             
             const patrimonioNeto = sumaActivos - sumaPasivos;
