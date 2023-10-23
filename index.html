@@ -197,7 +197,7 @@
                         const li = document.createElement('li');
                         li.textContent = `${i}: ${data.activos[activoClasificacion][i]}`;
                         ul.appendChild(li);
-                        sumaActivos += parseFloat(data.activos[activoClasificacion][i].replaceAll(',', ''));
+                        sumaActivos += parseFloat(data.activos[activoClasificacion][i].replace(/[^0-9.]/g, ''));
                     }
                     document.getElementById('reporte').appendChild(title);
                     document.getElementById('reporte').appendChild(ul);
@@ -220,7 +220,7 @@
                         const li = document.createElement('li');
                         li.textContent = `${i}: ${data.pasivos[pasivoClasificacion][i]}`;
                         ul.appendChild(li);
-                        sumaPasivos += parseFloat(data.pasivos[pasivoClasificacion][i].replaceAll(',', ''));
+                        sumaPasivos += parseFloat(data.pasivos[pasivoClasificacion][i].replace(/[^0-9.]/g, ''));
                     }
                     document.getElementById('reporte').appendChild(title);
                     document.getElementById('reporte').appendChild(ul);
@@ -261,7 +261,7 @@
         }
         function editarElement () {
             const elementoPadre = document.getElementById(currentEditorID);
-            let precio = document.getElementById('valorModal').value.replace(/\D/g, '');
+            let precio = document.getElementById('valorModal').value.replace(/[^0-9.]/g, '');
             if (!precio.length) {
                 return
             }
@@ -295,7 +295,7 @@
             } else {
                 return;
             }
-            let precio = document.getElementById('valorNuevo').value.replace(/\D/g, '');
+            let precio = document.getElementById('valorNuevo').value.replace(/[^0-9.]/g, '');
             if (!precio.length) {
                 return
             }
