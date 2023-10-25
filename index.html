@@ -11,13 +11,12 @@
     <style>
         #columnas {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(7, 1fr);
             grid-gap: 10px;
         }
 
         .column {
             border: 2px dashed #ccc;
-            min-height: 100px;
             padding: 10px;
             border-radius: 10px;
         }
@@ -103,6 +102,9 @@
         <div class="column" id="column6" ondrop="drop(event)" ondragover="allowDrop(event)">
             <h2>Pasivos diferidos</h2>
         </div>
+        <div class="column" id="column7" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Capital</h2>
+        </div>
     </div>
     <hr>
     
@@ -148,26 +150,23 @@
         function drag(event) {
                 event.dataTransfer.setData("text", event.target.id);
         }
-        
-        let data = {'activos':{}, 'pasivos': {}};
-        
+      
         function drop(event) {
             event.preventDefault();
             var data = event.dataTransfer.getData("text");
             var target = event.target;
-
             while (!target.classList.contains('column') && target.parentElement) {
                 target = target.parentElement;
             }
-
             if (target.classList.contains('column')) {
                 target.appendChild(document.getElementById(data));
             }
             document.getElementById("generarReporte").click();
-
         }
+
+        let data;
         document.getElementById("generarReporte").addEventListener("click", function() {
-            data = {'activos':{}, 'pasivos': {}};
+            data = {'activos':{}, 'pasivos': {}, 'capital': {}};
             var columnas = document.querySelectorAll(".column");
             columnas.forEach(function(columna) {
                 var elementos = columna.querySelectorAll(".drag-element");
@@ -181,16 +180,25 @@
                 var elementosEnColumna = Array.from(elementos).map(function(elemento) {
                     var h3 = elemento.querySelector("h3").textContent;
                     var p = elemento.querySelector("p").textContent;
-                    data[columna.querySelector("h2").textContent.includes('Activos')? 'activos' : 'pasivos']
-                    [columna.querySelector("h2").textContent][h3] = p;
-                    return h3 + ": " + p;
+                    if (columna.querySelector("h2").textContent.includes('Activos')) {
+                        data['activos'][columna.querySelector("h2").textContent][h3] = p;
+                    }
+                    else if (columna.querySelector("h2").textContent.includes('Pasivos')) {
+                        data['pasivos'][columna.querySelector("h2").textContent][h3] = p;
+                    }
+                    else {
+                        data['capital'][h3] = p;
+                    }
                 });
             });
             document.getElementById('reporte').innerHTML = '';
             const clasificacion = {'activos': ['Activos Corrientes', 'Activos Fijos', 'Activos diferidos'],
-                                   'pasivos': ['Pasivos circulantes', 'Pasivos fijos', 'Pasivos diferidos']}
+                                   'pasivos': ['Pasivos circulantes', 'Pasivos fijos', 'Pasivos diferidos'],
+                                   'capital': ['Capital']}
             let sumaActivos = 0;
             let sumaPasivos = 0;
+            let sumaCapital = 0;
+
             for (activoClasificacion of clasificacion.activos) {
                 let sumaClasificacionIndividual = 0;
                 if (data.activos[activoClasificacion]) {
@@ -256,11 +264,40 @@
             const hr2= document.createElement('hr');
             hr2.classList.add('hr-sub');
             document.getElementById('reporte').appendChild(hr2);
+
+            if (data.capital) {
+                const title = document.createElement('div');
+                title.classList.add('text-primary');
+                title.textContent = 'Capital';
+                document.getElementById('reporte').appendChild(title);  
+                const ul = document.createElement('ul');
+                ul.classList.add('mb-0');
+                let sumaClasificacionIndividual = 0;
+                for (capitalItem in data.capital) {
+                    const li = document.createElement('li');
+                    li.textContent = `${capitalItem}: ${data.capital[capitalItem]}`;
+                    ul.appendChild(li);
+                    sumaCapital += parseFloat(data.capital[capitalItem].replace(/[^0-9.]/g, ''));
+                }
+                document.getElementById('reporte').appendChild(ul);
+            }
             
-            const patrimonioNeto = sumaActivos - sumaPasivos;
-            const patrimonioNetoElement = document.createElement('div');
-            patrimonioNetoElement.textContent =`Patrimonio Neto (A-P): ${new Intl.NumberFormat().format(patrimonioNeto)}`;
-            document.getElementById('reporte').appendChild(patrimonioNetoElement);
+            const sumaCapitalElement = document.createElement('div');
+            sumaCapitalElement.textContent = `Suma Capital: ${new Intl.NumberFormat().format(sumaCapital)}`;
+            sumaCapitalElement.classList.add('text-success');
+            document.getElementById('reporte').appendChild(sumaCapitalElement);
+
+            const hr3= document.createElement('hr');
+            hr3.classList.add('hr-sub');
+            document.getElementById('reporte').appendChild(hr3);
+            
+            const capitalPasivosSuma = sumaCapital + sumaPasivos;
+            const capitalPasivosSumaElement = document.createElement('div');
+            capitalPasivosSumaElement.classList.add(capitalPasivosSuma === sumaActivos? 'text-info': 'text-danger');
+            capitalPasivosSumaElement.textContent =`Capital + Pasivos: ${new Intl.NumberFormat().format(capitalPasivosSuma)}`;
+            capitalPasivosSumaElement.textContent += (capitalPasivosSuma === sumaActivos? ' ✅': ' ❌');
+
+            document.getElementById('reporte').appendChild(capitalPasivosSumaElement);
 
         });
 
