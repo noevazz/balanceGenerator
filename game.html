@@ -127,12 +127,13 @@
             const activeOrPasive = getRandomInt(2)?'Activo':'Pasivo';
             const majorClassifications = Object.keys(dataCopy[activeOrPasive]);
             const selectedMajorClassificationLOCAL = majorClassifications[getRandomInt(majorClassifications.length)];
+            if (selectedMajorClassificationLOCAL === selectedMajorClassification) {
+                return getOption();
+            }
             const children = Object.keys(dataCopy[activeOrPasive][selectedMajorClassificationLOCAL]);
             const child = children[getRandomInt(children.length)];
             const optionToReturn = dataCopy[activeOrPasive][selectedMajorClassificationLOCAL][child];
-            if (optionToReturn === answer || selectedMajorClassificationLOCAL === selectedMajorClassification) {
-                return getOption();
-            }
+            
             return dataCopy[activeOrPasive][selectedMajorClassificationLOCAL][child];
         }
 
@@ -162,7 +163,7 @@
                             break;
                         }
                     }
-                    options = shuffleArray([getOption(), getOption(), answer]);
+                    options = shuffleArray(options);
                     console.log(options)
                     for (let index = 0; index < 3; index++) {
                         document.getElementById(`option${index}label`).textContent = options[index];
