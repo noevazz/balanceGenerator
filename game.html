@@ -154,11 +154,10 @@
                     answer = data[activeOrPasive][selectedMajorClassification][getRandomInt(childreLength)];
                     options = [];
                     options.push(answer)
-                    const secondOption = getOption()
-                    options.push(secondOption)
+                    options.push(getOption())
                     while (true) {
                         const thirdOption = getOption();
-                        if (options.indexOf(thirdOption) !== -1) {
+                        if (options.indexOf(thirdOption)) {
                             options.push(thirdOption)
                             break;
                         }
