@@ -188,13 +188,14 @@
                     selectedOptionElement.checked = false;
                     if (selectedOption === answer) {
                         alert('EXCELENTE!')
-                        data[activeOrPasive][selectedMajorClassification].splice(answer, 1);
-                        document.querySelectorAll(".form-check-label").forEach(function(label) {
-                            label.classList.remove("selected");
-                        });
-                        
+                        data[activeOrPasive][selectedMajorClassification].splice(answer, 1);                        
                         changeQuestion();
+                    } else {
+                        alert('Ups! esa no es la opcion correcta')
                     }
+                    document.querySelectorAll(".form-check-label").forEach(function(label) {
+                            label.classList.remove("selected");
+                    });
                 } else {
                     alert("Por favor, selecciona una opción.");
                 }
