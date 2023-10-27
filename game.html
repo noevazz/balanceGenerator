@@ -12,32 +12,41 @@
         /* Centra las opciones horizontalmente */
         .form-check {
             margin-right: 20px;
+            margin-bottom: 1rem;
         }
         
         /* Cambia el color al hacer clic en la opción */
         .form-check-label.selected {
-            background-color: #007BFF;
-            color: #fff;
+            color: burlywood;
+            font-weight: bolder;
+        }
+        label:hover {
+            background-color: rgb(50, 50, 59);
+        }
+        label{
+            display: inline-block;
         }
     </style> 
 </head>
 <body data-bs-theme="dark">
     <a href="./index.html">BalanceGenerator</a>
     <div class="container mt-5">
-        <h1 class="text-center" id="question">Pregunta 1</h1>
-        <div class="form-check">
-            <input type="radio" class="form-check-input" name="answer" value="option0" id="option0input">
-            <label class="form-check-label" for="option0input" id="option0label">Opción A</label>
+        <h1 class="text-center mb-5" id="question">Pregunta 1</h1>
+        <div class="d-flex flex-column align-items-center">
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="answer" value="option0" id="option0input">
+                <label class="form-check-label" for="option0input" id="option0label">Opción A</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="answer" value="option1" id="option1input">
+                <label class="form-check-label" for="option1input" id="option1label">Opción B</label>
+            </div>
+            <div class="form-check">
+                <input type="radio" class="form-check-input" name="answer" value="option2" id="option2input">
+                <label class="form-check-label" for="option2input" id="option2label">Opción C</label>
+            </div>
+            <button class="btn btn-primary mt-3" id="submitBtn">Enviar</button>
         </div>
-        <div class="form-check">
-            <input type="radio" class="form-check-input" name="answer" value="option1" id="option1input">
-            <label class="form-check-label" for="option1input" id="option1label">Opción B</label>
-        </div>
-        <div class="form-check">
-            <input type="radio" class="form-check-input" name="answer" value="option2" id="option2input">
-            <label class="form-check-label" for="option2input" id="option2label">Opción C</label>
-        </div>
-        <button class="btn btn-primary mt-3" id="submitBtn">Enviar</button>
     </div>
 
     <script>
