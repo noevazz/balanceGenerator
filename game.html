@@ -95,7 +95,7 @@
                 ]
             }
         };
-        const dataCopy = Object.assign({}, data);
+        const dataCopy = JSON.parse(JSON.stringify(data));
         let activeOrPasive;
         let selectedMajorClassification;
         let answer;
